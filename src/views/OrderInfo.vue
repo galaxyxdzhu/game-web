@@ -1,6 +1,6 @@
 <template>
   <div class="order-form">
-    <div class="top">
+    <div class="title">
       <van-icon name="cross" class="back-btn" @click="back" />
       <h3>请填写您的个人信息</h3>
     </div>
@@ -67,5 +67,24 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.order-form {
+  .title {
+    height: 35px;
+    width: 100%;
+    background: #f2f2f2;
+    line-height: 35px;
+    text-align: center;
+    position: relative;
+    .back-btn {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 35px;
+      line-height: 35px;
+      font-size: 18px;
+    }
+  }
+}
 </style>

@@ -13,11 +13,12 @@
         </div>
       </div>
     </div>
+    <div class="bottom"></div>
   </div>
 </template>
 
 <script>
-// import { mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 export default {
   data() {
     return {
@@ -42,11 +43,12 @@ export default {
     }
   },
   methods: {
-    // ...mapActions({
-    // setPlatform: 'setPlatform'
-    // }),
+    ...mapActions({
+      setPlatform: 'setPlatform'
+    }),
     onPlatformClick(item) {
-      // this.setPlatform(item)
+      this.setPlatform(item.name)
+      this.$router.push('/main')
     }
   }
 }
@@ -63,15 +65,15 @@ export default {
     align-items: center;
   }
   .content {
-    flex: 1;
+    height: 40%;
+    overflow: hidden;
     .grid-box {
-      width: 100%;
-      height: 30%;
+      height: 100%;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(2, 2.667rem);
+      // grid-template-columns: repeat(2, 1fr);
+      // grid-template-rows: repeat(2, 2.667rem);
       justify-items: center;
-      align-items: center;
+      // align-items: center;
     }
     .platform-item {
       font-weight: bold;
@@ -84,6 +86,9 @@ export default {
       justify-content: center;
       align-items: center;
     }
+  }
+  .bottom {
+    height: 30%;
   }
 }
 </style>

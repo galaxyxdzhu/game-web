@@ -21,7 +21,7 @@
   // set 1rem = viewWidth / 10    设置我们 html 元素的文字大小
   function setRemUnit() {
     // html 宽度分为10等份
-    var rem = docEl.clientWidth / 10
+    var rem = docEl.clientWidth <= 750 ? docEl.clientWidth / 7.5 : 50
     docEl.style.fontSize = rem + 'px'
   }
 
