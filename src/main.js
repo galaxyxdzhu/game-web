@@ -9,7 +9,7 @@ import 'vant/lib/index.css'
 
 Vue.use(Vant)
 
-// import './utils/flexable'
+import './utils/flexable'
 
 Vue.config.productionTip = false
 

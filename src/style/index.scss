@@ -1,21 +1,33 @@
 @import './normalize.scss';
+@import './comonents.scss';
+
+p,
+h1,
+h2,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
 
 html,
 body {
+  width: 100%;
   height: 100%;
 }
-.container {
+
+#app {
   width: 100%;
   max-width: 425px;
   height: 100%;
   margin: 0 auto;
-  font-size: 12px;
+  font-size: 14px;
 }
 
-p,
-h3 {
-  margin: 0;
-  padding: 0;
+.container {
+  width: 100%;
+  height: 100%;
 }
 
 .top {
