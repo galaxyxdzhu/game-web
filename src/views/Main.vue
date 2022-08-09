@@ -51,42 +51,8 @@ export default {
       orderInfoDialogVisble: false
     }
   },
-
-  mounted() {
-    // window.addEventListener('scroll', (e) => {
-    //   const top = document.body.scrollTop || document.documentElement.scrollTop
-    //   if (top > 35) {
-    //     this.fixed = true
-    //   } else {
-    //     this.fixed = false
-    //   }
-    // })
-    // this.$nextTick(() => {
-    //   this.infoHeight = this.$refs.info.offsetHeight
-    // })
-  },
   computed: {
-    ...mapGetters(['selectGames']),
-    heightStyle() {
-      return {
-        height: (this.infoHeight = 'px')
-      }
-    },
-    fixedStyle() {
-      if (this.fixed) {
-        return {
-          position: 'fixed',
-          top: 0,
-          left: 0
-        }
-      } else {
-        return {
-          position: 'static',
-          top: 0,
-          left: 0
-        }
-      }
-    }
+    ...mapGetters(['selectGames'])
   },
   methods: {
     // 显示已选游戏弹窗
