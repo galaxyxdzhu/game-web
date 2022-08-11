@@ -32,7 +32,6 @@ request.interceptors.response.use(
     }
   },
   (error) => {
-    console.log('err' + error) // for debug
     Notify({
       message: error.message,
       type: 'error',
@@ -54,5 +53,19 @@ export function addOrder(data) {
     url: '/order/addOrder',
     method: 'post',
     data
+  })
+}
+
+export function getGameTypes() {
+  return request({
+    url: '/gameType/gameTypes',
+    method: 'get'
+  })
+}
+
+export function getPlatforms() {
+  return request({
+    url: '/platform/platforms',
+    method: 'get'
   })
 }

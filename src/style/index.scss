@@ -45,3 +45,17 @@ body {
 .van-search {
   padding: 0 !important;
 }
+
+.van-tabs--line .van-tabs__wrap {
+  height: 0.48rem !important;
+  margin-bottom: 0.2rem;
+}
+
+.van-tab {
+  height: 0.4rem;
+  line-height: 0.4rem;
+}
+.van-tabs__line {
+  bottom: 0;
+  display: none;
+}

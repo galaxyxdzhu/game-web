@@ -3,41 +3,104 @@
     <div class="search">
       <van-search v-model="search" placeholder="请输入游戏名" />
     </div>
-    <div class="table-content">
-      <div class="game-item th">
-        <span class="checkbox">选择</span>
-        <span class="game-name">名称</span>
-        <span class="game-size">容量(G)</span>
-      </div>
-      <div class="game-item" v-for="item in games" :key="item.id">
-        <van-checkbox
-          class="checkbox"
-          v-model="item.checked"
-          @change="onSelected(item)"
-        ></van-checkbox>
-        <span class="game-name">{{ item.name }}</span>
-        <span class="game-size">{{ item.size }}</span>
-      </div>
+
+    <div class="filter">
+      <span @click="showFilterDialog" v-if="!curGameType">筛选</span>
+      <span @click="clearFilter" v-if="curGameType">清除筛选</span>
     </div>
+
+    <van-tabs v-model="activeTab" animated>
+      <van-tab title="表格">
+        <div class="table-content">
+          <div class="game-item th">
+            <span class="checkbox">选择</span>
+            <span class="game-name">名称</span>
+            <span class="game-size">容量(G)</span>
+          </div>
+          <div class="game-item" v-for="item in games" :key="item.id">
+            <van-checkbox
+              class="checkbox"
+              v-model="item.checked"
+              @change="onSelected(item)"
+            ></van-checkbox>
+            <span class="game-name">{{ item.name }}</span>
+            <span class="game-size">{{ item.size }}</span>
+          </div>
+        </div>
+      </van-tab>
+      <van-tab title="图示">
+        <div class="table-image">
+          <div class="table-image-item" v-for="item in games" :key="item.id">
+            <div class="table-image-left">
+              <img :src="gameImage(item)" alt="" />
+            </div>
+            <div class="table-image-right">
+              <p>{{ item.name }}</p>
+              <div class="info">
+                <span>{{ item.size }}G</span>
+                <span>{{ item.genre }}</span>
+                <van-checkbox
+                  class="checkbox"
+                  v-model="item.checked"
+                  @change="onSelected(item)"
+                ></van-checkbox>
+              </div>
+              <div class="rate">
+                <van-rate :value="item.rate" :size="12" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </van-tab>
+    </van-tabs>
+
+    <van-popup v-model="showPicker" round position="bottom">
+      <van-picker
+        show-toolbar
+        :columns="gameTypes"
+        @cancel="showPicker = false"
+        @confirm="onConfirm"
+      />
+    </van-popup>
   </div>
 </template>
 
 <script>
-import { getGames } from '@/api'
+import { getGames, getGameTypes } from '@/api'
 import { mapActions, mapGetters } from 'vuex'
 import { Dialog } from 'vant'
 export default {
   data() {
     return {
-      search: ''
+      search: '',
+      activeTab: 1,
+      gameTypes: [],
+      showPicker: false
     }
   },
+
   computed: {
-    ...mapGetters(['selectGames', 'totalGames', 'flashSize']),
+    ...mapGetters([
+      'selectGames',
+      'totalGames',
+      'flashSize',
+      'curGameType',
+      'curPlatform'
+    ]),
     games() {
       return this.totalGames.filter(
-        (item) => item.name.indexOf(this.search) !== -1
+        (item) =>
+          item.name.indexOf(this.search) !== -1 &&
+          item.genre.indexOf(this.curGameType) !== -1
       )
+    },
+    gameImage() {
+      return (item) => {
+        return (
+          item.src ||
+          'https://img0.baidu.com/it/u=1522769245,1660535558&fm=253&app=138&size=w931&n=0&f=PNG&fmt=auto?sec=1660410000&t=257d8b4bfd74a9d3602e6cafad390e2d'
+        )
+      }
     },
     selectGamesSize: (state) =>
       state.selectGames
@@ -48,12 +111,24 @@ export default {
   },
   created() {
     this.getGameData()
+    this.getGameTypes()
   },
   methods: {
     ...mapActions({
       setSelectGames: 'setSelectGames',
-      setTotalGames: 'setTotalGames'
+      setTotalGames: 'setTotalGames',
+      setCurGameType: 'setCurGameType'
     }),
+    showFilterDialog() {
+      this.showPicker = true
+    },
+    clearFilter() {
+      this.setCurGameType('')
+    },
+    onConfirm(val) {
+      this.setCurGameType(val.name)
+      this.showPicker = false
+    },
     onSelected(item) {
       if (this.flashSize - this.selectGamesSize < 0) {
         Dialog.alert({
@@ -73,6 +148,14 @@ export default {
         })
         this.setTotalGames(totalGames)
       }
+    },
+    async getGameTypes() {
+      const ret = await getGameTypes()
+      if (ret && ret.code) {
+        this.gameTypes = ret.data.map((item) => {
+          return { ...item, text: item.name }
+        })
+      }
     }
   }
 }
@@ -82,6 +165,12 @@ export default {
 .table-games {
   padding: 0 0.2rem;
   box-sizing: border-box;
+  .filter {
+    text-align: right;
+    color: #1989fa;
+    margin-bottom: 0.2rem;
+  }
+
   .search {
     margin-bottom: 0.2rem;
   }
@@ -127,6 +216,52 @@ export default {
     display: flex;
     align-items: center;
     padding-left: 0.08rem;
+  }
+
+  .table-image-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 1.6rem;
+    margin: 0.12rem 0;
+    border: 1px solid #ccc;
+    overflow: hidden;
+    font-size: 12px;
+    height: 100%;
+    .table-image-left {
+      width: 1.6rem;
+      height: 1.6rem;
+      object-fit: cover;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    .table-image-right {
+      flex: 1;
+      height: 1.6rem;
+      display: flex;
+      padding: 0.08rem;
+      box-sizing: border-box;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+    p {
+      text-align: left;
+      margin: 0.12rem;
+    }
+    .info {
+      margin: 0.12rem;
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .rate {
+      margin: 0 0.12rem;
+    }
   }
 }
 </style>

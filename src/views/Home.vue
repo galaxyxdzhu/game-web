@@ -19,28 +19,15 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { getPlatforms } from '@/api'
 export default {
   data() {
     return {
-      platforms: [
-        {
-          id: 1,
-          name: 'switch'
-        },
-        {
-          id: 2,
-          name: 'ps4'
-        },
-        {
-          id: 3,
-          name: 'xbox'
-        },
-        {
-          id: 4,
-          name: 'psp'
-        }
-      ]
+      platforms: []
     }
+  },
+  created() {
+    this.getPlatforms()
   },
   methods: {
     ...mapActions({
@@ -49,6 +36,12 @@ export default {
     onPlatformClick(item) {
       this.setPlatform(item.name)
       this.$router.push('/main')
+    },
+    async getPlatforms() {
+      const ret = await getPlatforms()
+      if (ret && ret.code) {
+        this.platforms = ret.data
+      }
     }
   }
 }
