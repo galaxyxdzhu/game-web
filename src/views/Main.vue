@@ -21,7 +21,10 @@
       position="right"
       :style="{ height: '100%', width: '100%' }"
     >
-      <OrderInfo @back="onOrderInfoDialogClose" />
+      <OrderInfo
+        @back="onOrderInfoDialogClose"
+        @submitSuccess="onOrderInfoDialogClose"
+      />
     </van-popup>
   </div>
 </template>

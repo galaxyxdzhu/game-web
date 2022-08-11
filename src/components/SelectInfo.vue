@@ -1,35 +1,38 @@
 <template>
-  <div class="select-info" :style="fixedStyle">
-    <div class="info-left">
-      <div class="info-item">
-        <span>游戏硬盘:</span>
-        <span>内置</span>
-      </div>
-      <div class="info-item">
-        <span>硬盘实际容量:</span>
-        <span>{{ flashSize }}G</span>
-      </div>
-      <div class="info-item">
-        <span>已选游戏容量:</span>
-        <span>{{ selectGamesSize }}G</span>
-      </div>
-      <div class="info-item">
-        <span>硬盘剩余容量:</span>
-        <span>{{ remainedSize }}G</span>
-      </div>
-    </div>
-    <div class="info-right">
-      <div class="right-top">
+  <div class="info-wrapper">
+    <div class="info-blank" v-if="fixed"></div>
+    <div class="select-info" :style="fixedStyle" ref="info">
+      <div class="info-left">
         <div class="info-item">
-          <span>游戏总数:</span>
-          <span>{{ selectGames.length }}</span>
+          <span>游戏硬盘:</span>
+          <span>内置</span>
+        </div>
+        <div class="info-item">
+          <span>硬盘实际容量:</span>
+          <span>{{ flashSize }}G</span>
+        </div>
+        <div class="info-item">
+          <span>已选游戏容量:</span>
+          <span>{{ selectGamesSize }}G</span>
+        </div>
+        <div class="info-item">
+          <span>硬盘剩余容量:</span>
+          <span>{{ remainedSize }}G</span>
         </div>
       </div>
-      <div class="right-bottom right-item">
-        <div class="right-item">
-          <a class="link" @click="onLinkClick">查看已选游戏</a>
+      <div class="info-right">
+        <div class="right-top">
+          <div class="info-item">
+            <span>游戏总数:</span>
+            <span>{{ selectGames.length }}</span>
+          </div>
         </div>
-        <span class="submit-btn" @click="onSubmit">提交</span>
+        <div class="right-bottom right-item">
+          <div class="right-item">
+            <a class="link" @click="onLinkClick">查看已选游戏</a>
+          </div>
+          <span class="submit-btn" @click="onSubmit">提交</span>
+        </div>
       </div>
     </div>
   </div>
@@ -62,6 +65,7 @@ export default {
           position: 'fixed',
           top: 0,
           left: '50%',
+          width: '100%',
           transform: 'translateX(-50%)',
           maxWidth: '450px'
         }
@@ -79,9 +83,6 @@ export default {
       const top = document.body.scrollTop || document.documentElement.scrollTop
       this.fixed = top > 35 ? true : false
     })
-    this.$nextTick(() => {
-      this.infoHeight = this.$refs.info.offsetHeight
-    })
   },
   methods: {
     onLinkClick() {
@@ -95,8 +96,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.info-blank {
+  height: 1.8rem;
+}
 .select-info {
+  height: 1.8rem;
   display: grid;
+  width: 100%;
+  max-width: 450px;
   grid-template-columns: 1fr 1fr;
   // display: flex;
   // justify-content: space-between;
@@ -107,6 +114,7 @@ export default {
   width: 100%;
   z-index: 10;
   margin: 0 auto;
+
   .info-left {
     height: 100%;
     flex: 1;

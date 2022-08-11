@@ -30,22 +30,16 @@
 <script>
 import { Notify } from 'vant'
 import { addOrder } from '@/api'
+import { mapGetters } from 'vuex'
 export default {
-  props: {
-    games: {
-      type: Array,
-      require: true
-    },
-    size: {
-      type: String,
-      require: true
-    }
-  },
   data() {
     return {
       username: '',
       phone: ''
     }
+  },
+  computed: {
+    ...mapGetters(['selectGames', 'flashSize'])
   },
   methods: {
     back() {
@@ -55,8 +49,8 @@ export default {
       const ret = await addOrder({
         name: this.username,
         phone: this.phone,
-        games: this.games.map((item) => item.id).join(','),
-        size: this.size
+        games: this.selectGames.map((item) => item.id).join(','),
+        size: this.flashSize
       })
       if (ret) {
         this.$emit('submitSuccess')
