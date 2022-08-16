@@ -6,25 +6,25 @@
       direction="horizontal"
       @change="onSizeChange"
     >
-      <van-radio name="190">250G = 190G</van-radio>
-      <van-radio name="320">320G = 280G</van-radio>
-      <van-radio name="430">500G = 430G</van-radio>
-      <van-radio name="790">1000G = 790G</van-radio>
-      <van-radio name="1680">2000G = 1680G</van-radio>
-      <van-radio name="2500">3000G = 2500G</van-radio>
-      <van-radio name="3725">4000G = 3725G</van-radio>
-      <van-radio name="5588">6000G = 5588G</van-radio>
+      <van-radio v-for="item in sizes" :key="item.id" :name="item.normalSize"
+        >{{ item.normalSize }}G = {{ item.actualSize }}G</van-radio
+      >
     </van-radio-group>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import { getSizes } from '@/api'
 export default {
   data() {
     return {
-      size: 190
+      size: 256,
+      sizes: []
     }
+  },
+  created() {
+    this.getSizes()
   },
   methods: {
     ...mapActions({
@@ -32,6 +32,12 @@ export default {
     }),
     onSizeChange(val) {
       this.setFlashSize(val)
+    },
+    async getSizes() {
+      const ret = await getSizes()
+      if (ret && ret.code) {
+        this.sizes = ret.data
+      }
     }
   }
 }

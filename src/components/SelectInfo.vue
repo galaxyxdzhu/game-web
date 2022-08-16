@@ -4,10 +4,6 @@
     <div class="select-info" :style="fixedStyle" ref="info">
       <div class="info-left">
         <div class="info-item">
-          <span>游戏硬盘:</span>
-          <span>内置</span>
-        </div>
-        <div class="info-item">
           <span>硬盘实际容量:</span>
           <span>{{ flashSize }}G</span>
         </div>
@@ -19,32 +15,47 @@
           <span>硬盘剩余容量:</span>
           <span>{{ remainedSize }}G</span>
         </div>
+        <div class="info-item">
+          <span>游戏总数:</span>
+          <span>{{ selectGames.length }}</span>
+        </div>
       </div>
       <div class="info-right">
-        <div class="right-top">
-          <div class="info-item">
-            <span>游戏总数:</span>
-            <span>{{ selectGames.length }}</span>
-          </div>
-        </div>
-        <div class="right-bottom right-item">
-          <div class="right-item">
-            <a class="link" @click="onLinkClick">查看已选游戏</a>
-          </div>
-          <span class="submit-btn" @click="onSubmit">提交</span>
-        </div>
+        <van-button size="small" type="primary" @click="checkSelectGames"
+          >查看已选游戏</van-button
+        >
+
+        <van-button size="small" type="info" @click="showPicker = true"
+          >游戏分类</van-button
+        >
+
+        <van-button size="small" type="danger" @click="onSubmit"
+          >提交</van-button
+        >
       </div>
     </div>
+
+    <van-popup v-model="showPicker" round position="bottom">
+      <van-picker
+        show-toolbar
+        :columns="gameTypes"
+        @cancel="showPicker = false"
+        @confirm="onConfirm"
+      />
+    </van-popup>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import { getGameTypes } from '@/api'
 export default {
   name: 'SelectInfo',
   data() {
     return {
-      fixed: false
+      fixed: false,
+      gameTypes: [],
+      showPicker: false
     }
   },
   computed: {
@@ -78,6 +89,9 @@ export default {
       }
     }
   },
+  created() {
+    this.getGameTypes()
+  },
   mounted() {
     window.addEventListener('scroll', (e) => {
       const top = document.body.scrollTop || document.documentElement.scrollTop
@@ -85,7 +99,27 @@ export default {
     })
   },
   methods: {
-    onLinkClick() {
+    ...mapActions({
+      setCurGameType: 'setCurGameType'
+    }),
+    /**
+     * 获取游戏分类
+     */
+    async getGameTypes() {
+      const ret = await getGameTypes()
+      if (ret && ret.code) {
+        this.gameTypes = [{ id: 0, text: '所有', name: '' }].concat(
+          ret.data.map((item) => {
+            return { ...item, text: item.name }
+          })
+        )
+      }
+    },
+    onConfirm(val) {
+      this.showPicker = false
+      this.setCurGameType(val.name)
+    },
+    checkSelectGames() {
       this.$emit('checkSelectGames')
     },
     onSubmit() {
@@ -104,10 +138,10 @@ export default {
   display: grid;
   width: 100%;
   max-width: 450px;
-  grid-template-columns: 1fr 1fr;
-  // display: flex;
-  // justify-content: space-between;
-  // align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
   padding: 0.12rem 0.2rem;
   background: #f2f2f2;
   box-sizing: border-box;
@@ -117,16 +151,17 @@ export default {
 
   .info-left {
     height: 100%;
-    flex: 1;
-    margin-right: 0.4rem;
+    width: 100%;
+    display: grid;
+    grid-column-gap: 0.4rem;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 0.4rem 0.4rem;
   }
   .info-right {
-    height: 100%;
-    flex: 1;
-    margin-left: 0.4rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 0.4rem;
     font-size: 12px;
   }
   .info-item {
@@ -139,27 +174,6 @@ export default {
       color: red;
       font-weight: bold;
     }
-  }
-  .right-item {
-    text-align: right;
-    margin: 0.08rem 0;
-  }
-  .right-bottom {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-  }
-  .submit-btn {
-    display: inline-block;
-    padding: 0.08rem 0.24rem;
-    background: red;
-    color: #fff;
-    border-radius: 0.08rem;
-    margin-left: 0.08rem;
-  }
-  .link {
-    color: #1989fa;
   }
 }
 </style>

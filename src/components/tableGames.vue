@@ -4,12 +4,7 @@
       <van-search v-model="search" placeholder="请输入游戏名" />
     </div>
 
-    <div class="filter">
-      <span @click="showFilterDialog" v-if="!curGameType">筛选</span>
-      <span @click="clearFilter" v-if="curGameType">清除筛选</span>
-    </div>
-
-    <van-tabs v-model="activeTab" animated>
+    <!-- <van-tabs v-model="activeTab" animated>
       <van-tab title="表格">
         <div class="table-content">
           <div class="game-item th">
@@ -52,16 +47,30 @@
           </div>
         </div>
       </van-tab>
-    </van-tabs>
+    </van-tabs> -->
 
-    <van-popup v-model="showPicker" round position="bottom">
-      <van-picker
-        show-toolbar
-        :columns="gameTypes"
-        @cancel="showPicker = false"
-        @confirm="onConfirm"
-      />
-    </van-popup>
+    <div class="table-image">
+      <div class="table-image-item" v-for="item in games" :key="item.id">
+        <div class="table-image-left">
+          <img :src="gameImage(item)" alt="" />
+        </div>
+        <div class="table-image-right">
+          <p>{{ item.name }}</p>
+          <div class="info">
+            <span>{{ item.size }}G</span>
+            <span>{{ item.genre }}</span>
+            <van-checkbox
+              class="checkbox"
+              v-model="item.checked"
+              @change="onSelected(item)"
+            ></van-checkbox>
+          </div>
+          <div class="rate">
+            <van-rate :value="item.rate" :size="12" />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -111,7 +120,6 @@ export default {
   },
   created() {
     this.getGameData()
-    this.getGameTypes()
   },
   methods: {
     ...mapActions({
@@ -119,16 +127,7 @@ export default {
       setTotalGames: 'setTotalGames',
       setCurGameType: 'setCurGameType'
     }),
-    showFilterDialog() {
-      this.showPicker = true
-    },
-    clearFilter() {
-      this.setCurGameType('')
-    },
-    onConfirm(val) {
-      this.setCurGameType(val.name)
-      this.showPicker = false
-    },
+
     onSelected(item) {
       if (this.flashSize - this.selectGamesSize < 0) {
         Dialog.alert({
@@ -147,14 +146,6 @@ export default {
           }
         })
         this.setTotalGames(totalGames)
-      }
-    },
-    async getGameTypes() {
-      const ret = await getGameTypes()
-      if (ret && ret.code) {
-        this.gameTypes = ret.data.map((item) => {
-          return { ...item, text: item.name }
-        })
       }
     }
   }

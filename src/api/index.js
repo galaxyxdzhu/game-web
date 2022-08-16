@@ -69,3 +69,10 @@ export function getPlatforms() {
     method: 'get'
   })
 }
+
+export function getSizes() {
+  return request({
+    url: '/size/sizes',
+    method: 'get'
+  })
+}
