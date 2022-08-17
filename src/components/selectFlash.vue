@@ -6,7 +6,7 @@
       direction="horizontal"
       @change="onSizeChange"
     >
-      <van-radio v-for="item in sizes" :key="item.id" :name="item.normalSize"
+      <van-radio v-for="item in sizes" :key="item.id" :name="item.actualSize"
         >{{ item.normalSize }}G = {{ item.actualSize }}G</van-radio
       >
     </van-radio-group>
