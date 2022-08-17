@@ -68,7 +68,7 @@ export default {
         .toFixed(2) || 0,
     // 剩余容量
     remainedSize() {
-      return this.flashSize - this.selectGamesSize
+      return (this.flashSize - this.selectGamesSize).toFixed(2)
     },
     fixedStyle() {
       if (this.fixed) {

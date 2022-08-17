@@ -6,7 +6,7 @@
       @submit="handleSubmit"
     />
     <SelectFlash />
-    <TableGames />
+    <TableGames ref="tableGames" />
 
     <van-popup
       v-model="selectGamesDialogVisble"
@@ -37,7 +37,8 @@ import TableGames from '@/components/tableGames.vue'
 import CheckGames from './CheckGames.vue'
 import OrderInfo from './OrderInfo.vue'
 import { Dialog } from 'vant'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import { getSetting } from '@/api'
 export default {
   name: 'HomeView',
   components: {
@@ -54,10 +55,16 @@ export default {
       orderInfoDialogVisble: false
     }
   },
+  created() {
+    this.getSetting()
+  },
   computed: {
     ...mapGetters(['selectGames'])
   },
   methods: {
+    ...mapActions({
+      setTableIndex: 'setTableIndex'
+    }),
     // 显示已选游戏弹窗
     showSelectGameDialog() {
       this.selectGamesDialogVisble = true
@@ -76,7 +83,15 @@ export default {
       this.selectGamesDialogVisble = false
     },
     onOrderInfoDialogClose() {
+      this.$refs.tableGames.clear()
       this.orderInfoDialogVisble = false
+    },
+    async getSetting() {
+      const ret = await getSetting({ name: 'table_view' })
+      if (ret && ret.code) {
+        this.tableIndex = ret.data.value
+        this.setTableIndex(this.tableIndex || 1)
+      }
     }
   }
 }

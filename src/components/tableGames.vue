@@ -4,7 +4,7 @@
       <van-search v-model="search" placeholder="请输入游戏名" />
     </div>
 
-    <!-- <van-tabs v-model="activeTab" animated>
+    <van-tabs v-model="activeTab" animated v-if="tableIndex == 3">
       <van-tab title="表格">
         <div class="table-content">
           <div class="game-item th">
@@ -47,9 +47,26 @@
           </div>
         </div>
       </van-tab>
-    </van-tabs> -->
+    </van-tabs>
 
-    <div class="table-image">
+    <div class="table-content" v-if="tableIndex == 1">
+      <div class="game-item th">
+        <span class="checkbox">选择</span>
+        <span class="game-name">名称</span>
+        <span class="game-size">容量(G)</span>
+      </div>
+      <div class="game-item" v-for="item in games" :key="item.id">
+        <van-checkbox
+          class="checkbox"
+          v-model="item.checked"
+          @change="onSelected(item)"
+        ></van-checkbox>
+        <span class="game-name">{{ item.name }}</span>
+        <span class="game-size">{{ item.size }}</span>
+      </div>
+    </div>
+
+    <div class="table-image" v-if="tableIndex == 2">
       <div class="table-image-item" v-for="item in games" :key="item.id">
         <div class="table-image-left">
           <img :src="gameImage(item)" alt="" />
@@ -71,11 +88,13 @@
         </div>
       </div>
     </div>
+
+    <div style="margin-top: 30px" v-if="!games.length">暂无游戏</div>
   </div>
 </template>
 
 <script>
-import { getGames, getGameTypes } from '@/api'
+import { getGames } from '@/api'
 import { mapActions, mapGetters } from 'vuex'
 import { Dialog } from 'vant'
 export default {
@@ -84,7 +103,8 @@ export default {
       search: '',
       activeTab: 1,
       gameTypes: [],
-      showPicker: false
+      showPicker: false,
+      loading: false
     }
   },
 
@@ -94,16 +114,19 @@ export default {
       'totalGames',
       'flashSize',
       'curGameType',
-      'curPlatform'
+      'platform',
+      'tableIndex'
     ]),
     games() {
       return this.totalGames.filter(
         (item) =>
           item.name.indexOf(this.search) !== -1 &&
-          item.genre.indexOf(this.curGameType) !== -1
+          item.genre.indexOf(this.curGameType) !== -1 &&
+          item.platform.indexOf(this.platform) !== -1
       )
     },
     gameImage() {
+      1
       return (item) => {
         return (
           item.src ||
@@ -136,7 +159,17 @@ export default {
         item.checked = false
       }
     },
+    clear() {
+      const totalGames = this.totalGames.map((item) => {
+        return {
+          ...item,
+          checked: false
+        }
+      })
+      this.setTotalGames(totalGames)
+    },
     async getGameData() {
+      this.loading = true
       const ret = await getGames()
       if (ret && ret.code) {
         const totalGames = ret.data.map((item) => {
@@ -146,6 +179,7 @@ export default {
           }
         })
         this.setTotalGames(totalGames)
+        this.loading = false
       }
     }
   }

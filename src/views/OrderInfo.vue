@@ -30,7 +30,7 @@
 <script>
 import { Notify } from 'vant'
 import { addOrder } from '@/api'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -49,6 +49,10 @@ export default {
     ...mapGetters(['selectGames', 'flashSize'])
   },
   methods: {
+    ...mapActions({
+      setSelectGames: 'setSelectGames',
+      setFlashSize: 'setFlashSize'
+    }),
     back() {
       this.$emit('back')
     },
@@ -66,7 +70,8 @@ export default {
       })
       if (ret) {
         this.$emit('submitSuccess')
-        Notify({ type: 'success', message: '提交成功' })
+        this.username = ''
+        this.phone = ''
       }
     }
   }

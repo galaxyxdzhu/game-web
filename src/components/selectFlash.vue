@@ -19,7 +19,7 @@ import { getSizes } from '@/api'
 export default {
   data() {
     return {
-      size: 256,
+      size: 0,
       sizes: []
     }
   },

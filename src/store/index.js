@@ -9,7 +9,7 @@ const state = {
   totalGames: [],
   selectGames: [],
   curGameType: '',
-  curPlatform: ''
+  tableIndex: 1
 }
 
 const getters = {
@@ -18,7 +18,8 @@ const getters = {
   selectGames: (state) => state.totalGames.filter((item) => item.checked) || [],
   totalGames: (state) => state.totalGames,
   curGameType: (state) => state.curGameType,
-  curPlatform: (state) => state.curPlatform
+  curPlatform: (state) => state.curPlatform,
+  tableIndex: (state) => state.tableIndex
 }
 
 const mutations = {
@@ -52,6 +53,10 @@ const actions = {
   // 选择平台
   setCurPlatform({ commit }, payload) {
     commit('setValue', { name: 'curPlatform', value: payload })
+  },
+  // 选择平台
+  setTableIndex({ commit }, payload) {
+    commit('setValue', { name: 'tableIndex', value: payload })
   }
 }
 

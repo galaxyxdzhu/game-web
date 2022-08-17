@@ -76,3 +76,11 @@ export function getSizes() {
     method: 'get'
   })
 }
+
+export function getSetting(params) {
+  return request({
+    url: `/set/name`,
+    method: 'get',
+    params
+  })
+}
