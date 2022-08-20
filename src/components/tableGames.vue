@@ -173,7 +173,7 @@ export default {
     }),
 
     onSelected(item) {
-      if (this.flashSize - this.selectGamesSize < 0) {
+      if (this.flashSize.actualSize - this.selectGamesSize < 0) {
         Dialog.alert({
           message: '亲，您选择的游戏容量已超标，请根据硬盘容量进行选择哦！'
         })
