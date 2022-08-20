@@ -85,7 +85,16 @@
       </div>
     </div>
 
-    <div style="margin-top: 30px" v-if="!games.length">暂无游戏</div>
+    <van-loading
+      style="margin-top: 30px"
+      v-if="loading"
+      type="spinner"
+      color="#1989fa"
+    />
+
+    <div style="margin-top: 30px" v-if="!games.length && !loading">
+      暂无游戏
+    </div>
   </div>
 </template>
 
