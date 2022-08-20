@@ -30,7 +30,7 @@
     >
       <OrderInfo
         @back="onOrderInfoDialogClose"
-        @submitSuccess="onOrderInfoDialogClose"
+        @submitSuccess="onOrderSubmit"
       />
     </van-popup>
   </div>
@@ -93,6 +93,10 @@ export default {
       this.selectGamesDialogVisble = false
     },
     onOrderInfoDialogClose() {
+      this.$refs.tableGames.clear()
+      this.orderInfoDialogVisble = false
+    },
+    onOrderSubmit() {
       this.$refs.tableGames.clear()
       this.orderInfoDialogVisble = false
       Notify({ type: 'success', message: '提交成功' })
