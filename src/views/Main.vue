@@ -5,10 +5,12 @@
       @checkSelectGames="showSelectGameDialog"
       @submit="handleSubmit"
     />
-    <SelectFlash />
+    <div class="middle-content">
+      <SelectFlash />
 
-    <div class="table-box">
-      <TableGames ref="tableGames" :searchKey="search" />
+      <div class="table-box">
+        <TableGames ref="tableGames" :searchKey="search" />
+      </div>
     </div>
 
     <div class="search">
@@ -116,10 +118,15 @@ export default {
 .container {
   display: flex;
   flex-direction: column;
-  .table-box {
+  .middle-content {
+    padding-bottom: 0.2rem;
     flex: 1;
     overflow: auto;
   }
+  // .table-box {
+  //   flex: 1;
+  //   overflow: auto;
+  // }
   .search {
     width: 100%;
     padding: 0.2rem;

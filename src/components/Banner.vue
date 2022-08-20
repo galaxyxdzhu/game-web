@@ -1,6 +1,6 @@
 <template>
   <div class="banner">
-    <h1>客户您好，欢迎选择{{ platform }}游戏</h1>
+    <h3>客户您好，欢迎选择{{ platform }}游戏</h3>
   </div>
 </template>
 
@@ -16,13 +16,13 @@ export default {
 
 <style lang="scss" scoped>
 .banner {
-  height: 35px;
+  height: 28px;
   background: #f2f2f2;
   border-bottom: 1px solid #ccc;
-  h1 {
-    font-size: 16px;
+  h3 {
+    font-size: 14px;
     height: 100%;
-    line-height: 35px;
+    line-height: 28px;
   }
 }
 </style>
