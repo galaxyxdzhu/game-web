@@ -18,7 +18,12 @@
         placeholder="电话"
         :rules="phoneRules"
       />
-      <van-field readonly :value="platform" label="平台" placeholder="平台" />
+      <van-field
+        readonly
+        :value="platform"
+        label="主机系统版本"
+        placeholder="主机系统版本"
+      />
       <div style="margin: 16px">
         <van-button round block type="danger" native-type="submit"
           >提交</van-button
