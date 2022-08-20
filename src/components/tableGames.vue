@@ -1,9 +1,5 @@
 <template>
   <div class="table-games">
-    <div class="search">
-      <van-search v-model="search" placeholder="请输入游戏名" />
-    </div>
-
     <van-tabs v-model="activeTab" animated v-if="tableIndex == 3">
       <van-tab title="表格">
         <div class="table-content">
@@ -98,13 +94,17 @@ import { getGames } from '@/api'
 import { mapActions, mapGetters } from 'vuex'
 import { Dialog } from 'vant'
 export default {
+  props: {
+    searchKey: ''
+  },
   data() {
     return {
       search: '',
       activeTab: 1,
       gameTypes: [],
       showPicker: false,
-      loading: false
+      loading: false,
+      platform: ''
     }
   },
 
@@ -114,7 +114,6 @@ export default {
       'totalGames',
       'flashSize',
       'curGameType',
-      'platform',
       'tableIndex'
     ]),
     games() {
@@ -122,7 +121,7 @@ export default {
         (item) =>
           item.name.indexOf(this.search) !== -1 &&
           item.genre.indexOf(this.curGameType) !== -1 &&
-          item.platform.indexOf(this.platform) !== -1
+          item.platform === this.platform
       )
     },
     gameImage() {
@@ -141,8 +140,21 @@ export default {
         }, 0)
         .toFixed(2) || 0
   },
+  watch: {
+    searchKey(val) {
+      this.search = val
+    }
+  },
   created() {
     this.getGameData()
+  },
+  mounted() {
+    const { platform } = this.$route.params
+    if (platform) {
+      this.platform = platform
+    } else {
+      this.$router.push('/')
+    }
   },
   methods: {
     ...mapActions({
@@ -190,6 +202,7 @@ export default {
 .table-games {
   padding: 0 0.2rem;
   box-sizing: border-box;
+  flex: 1;
   .filter {
     text-align: right;
     color: #1989fa;

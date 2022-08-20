@@ -18,6 +18,7 @@
         placeholder="电话"
         :rules="phoneRules"
       />
+      <van-field readonly :value="platform" label="平台" placeholder="平台" />
       <div style="margin: 16px">
         <van-button round block type="danger" native-type="submit"
           >提交</van-button
@@ -28,7 +29,6 @@
 </template>
 
 <script>
-import { Notify } from 'vant'
 import { addOrder } from '@/api'
 import { mapActions, mapGetters } from 'vuex'
 export default {
@@ -46,7 +46,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['selectGames', 'flashSize'])
+    ...mapGetters(['selectGames', 'flashSize', 'platform'])
   },
   methods: {
     ...mapActions({
@@ -65,8 +65,9 @@ export default {
       const ret = await addOrder({
         name: this.username,
         phone: this.phone,
+        platform: this.platform,
         games: this.selectGames.map((item) => item.id).join(','),
-        size: this.flashSize
+        size: this.flashSize.normalSize
       })
       if (ret) {
         this.$emit('submitSuccess')

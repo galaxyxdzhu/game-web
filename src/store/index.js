@@ -5,7 +5,11 @@ Vue.use(Vuex)
 
 const state = {
   platform: 'PS4', // 平台
-  flashSize: 0, // 硬盘容量
+  flashSize: {
+    actualSize: 0,
+    normalSize: 0
+  }, // 硬盘容量
+  flashSizeMap: {},
   totalGames: [],
   selectGames: [],
   curGameType: '',
@@ -57,6 +61,10 @@ const actions = {
   // 选择平台
   setTableIndex({ commit }, payload) {
     commit('setValue', { name: 'tableIndex', value: payload })
+  },
+  // 选择平台
+  setFlashSizeMap({ commit }, payload) {
+    commit('setValue', { name: 'flashSizeMap', value: payload })
   }
 }
 

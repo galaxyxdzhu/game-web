@@ -5,7 +5,7 @@
       <div class="info-left">
         <div class="info-item">
           <span>硬盘实际容量:</span>
-          <span>{{ flashSize }}G</span>
+          <span>{{ flashSize.actualSize }}G</span>
         </div>
         <div class="info-item">
           <span>已选游戏容量:</span>
@@ -68,7 +68,7 @@ export default {
         .toFixed(2) || 0,
     // 剩余容量
     remainedSize() {
-      return (this.flashSize - this.selectGamesSize).toFixed(2)
+      return (this.flashSize.actualSize - this.selectGamesSize).toFixed(2)
     },
     fixedStyle() {
       if (this.fixed) {

@@ -35,7 +35,7 @@ export default {
     }),
     onPlatformClick(item) {
       this.setPlatform(item.name)
-      this.$router.push('/main')
+      this.$router.push({ name: 'Main', params: { platform: item.name } })
     },
     async getPlatforms() {
       const ret = await getPlatforms()

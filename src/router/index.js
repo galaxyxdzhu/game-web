@@ -12,7 +12,7 @@ const routes = [
     component: Home
   },
   {
-    path: '/main',
+    path: '/main/:platform',
     name: 'Main',
     component: Main
   },

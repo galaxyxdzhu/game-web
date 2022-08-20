@@ -20,7 +20,8 @@ export default {
   data() {
     return {
       size: 0,
-      sizes: []
+      sizes: [],
+      sizeMap: {}
     }
   },
   created() {
@@ -28,15 +29,21 @@ export default {
   },
   methods: {
     ...mapActions({
-      setFlashSize: 'setFlashSize'
+      setFlashSize: 'setFlashSize',
+      setFlashSizeMap: 'setFlashSizeMap'
     }),
     onSizeChange(val) {
-      this.setFlashSize(val)
+      this.setFlashSize(this.sizeMap.get(val))
     },
     async getSizes() {
       const ret = await getSizes()
       if (ret && ret.code) {
+        const sizes = new Map()
+        ret.data.forEach((item) => {
+          sizes.set(item.actualSize, item)
+        })
         this.sizes = ret.data
+        this.sizeMap = sizes
       }
     }
   }
