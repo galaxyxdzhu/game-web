@@ -19,8 +19,7 @@
         :rules="phoneRules"
       />
       <van-field
-        readonly
-        :value="platform"
+        v-model="platform"
         label="主机系统版本"
         placeholder="主机系统版本"
       />
@@ -40,6 +39,7 @@ export default {
   data() {
     return {
       username: '',
+      platform: '',
       phone: '',
       phoneRules: [
         { required: true, message: '请填写电话' },
