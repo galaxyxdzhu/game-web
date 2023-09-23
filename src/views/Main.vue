@@ -11,10 +11,9 @@
       <div class="table-box">
         <TableGames ref="tableGames" :searchKey="search" />
       </div>
-    </div>
-
-    <div class="search">
-      <van-search v-model="search" placeholder="请输入游戏名" />
+      <div class="search">
+        <van-search v-model="search" placeholder="请输入游戏名" />
+      </div>
     </div>
 
     <van-popup
@@ -119,14 +118,16 @@ export default {
   display: flex;
   flex-direction: column;
   .middle-content {
-    padding-bottom: 0.2rem;
     flex: 1;
-    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
-  // .table-box {
-  //   flex: 1;
-  //   overflow: auto;
-  // }
+  .table-box {
+    flex: 1;
+    overflow: hidden;
+  }
+
   .search {
     width: 100%;
     padding: 0.2rem;

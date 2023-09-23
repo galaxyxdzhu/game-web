@@ -1,6 +1,6 @@
 <template>
   <div class="banner">
-    <h3>客户您好，欢迎选择{{ platform }}游戏</h3>
+    <h3>客户您好，欢迎选择游戏</h3>
   </div>
 </template>
 

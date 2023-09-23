@@ -1,6 +1,6 @@
 <template>
   <div class="table-games">
-    <van-tabs v-model="activeTab" animated v-if="tableIndex == 3">
+    <!-- <van-tabs v-model="activeTab" animated v-if="tableIndex == 3">
       <van-tab title="表格">
         <div class="table-content">
           <div class="game-item th">
@@ -43,7 +43,7 @@
           </div>
         </div>
       </van-tab>
-    </van-tabs>
+    </van-tabs> -->
 
     <div class="table-content" v-if="tableIndex == 1">
       <div class="game-item th">
@@ -51,38 +51,29 @@
         <span class="game-name">名称</span>
         <span class="game-size">容量(G)</span>
       </div>
-      <div class="game-item" v-for="item in games" :key="item.id">
-        <van-checkbox
-          class="checkbox"
-          v-model="item.checked"
-          @change="onSelected(item)"
-        ></van-checkbox>
-        <span class="game-name">{{ item.name }}</span>
-        <span class="game-size">{{ item.size }}</span>
-      </div>
+      <virtual-list
+        style="height: 100%; overflow-y: auto; padding: 0 0.2rem"
+        scrollable
+        :data-key="'id'"
+        :data-sources="games"
+        :data-component="lineItem"
+        :extra-props="{
+          onSelected
+        }"
+      />
     </div>
 
     <div class="table-image" v-if="tableIndex == 2">
-      <div class="table-image-item" v-for="item in games" :key="item.id">
-        <div class="table-image-left">
-          <img :src="gameImage(item)" alt="" />
-        </div>
-        <div class="table-image-right">
-          <p>{{ item.name }}</p>
-          <div class="info">
-            <span>{{ item.size }}G</span>
-            <span>{{ item.genre }}</span>
-            <van-checkbox
-              class="checkbox"
-              v-model="item.checked"
-              @change="onSelected(item)"
-            ></van-checkbox>
-          </div>
-          <div class="rate">
-            <van-rate :value="item.rate" :size="12" />
-          </div>
-        </div>
-      </div>
+      <virtual-list
+        style="height: 100%; overflow-y: auto; padding: 0 0.2rem"
+        scrollable
+        :data-key="'id'"
+        :data-sources="games"
+        :data-component="item"
+        :extra-props="{
+          onSelected
+        }"
+      />
     </div>
 
     <van-loading
@@ -102,12 +93,17 @@
 import { getGames } from '@/api'
 import { mapActions, mapGetters } from 'vuex'
 import { Dialog } from 'vant'
+import VirtualList from 'vue-virtual-scroll-list'
+import GameTableItem from './gameTableItem.vue'
+import GameLineItem from './gameLineItem.vue'
 export default {
   props: {
     searchKey: ''
   },
   data() {
     return {
+      item: GameTableItem,
+      lineItem: GameLineItem,
       search: '',
       activeTab: 1,
       gameTypes: [],
@@ -134,7 +130,6 @@ export default {
       )
     },
     gameImage() {
-      1
       return (item) => {
         return (
           item.src ||
@@ -172,8 +167,8 @@ export default {
       setCurGameType: 'setCurGameType'
     }),
 
-    onSelected(item) {
-      if (this.flashSize.actualSize - this.selectGamesSize < 0) {
+    onSelected(item, e) {
+      if (this.flashSize.actualSize - this.selectGamesSize < 0 && e) {
         Dialog.alert({
           message: '亲，您选择的游戏容量已超标，请根据硬盘容量进行选择哦！'
         })
@@ -209,9 +204,9 @@ export default {
 
 <style lang="scss" scoped>
 .table-games {
-  padding: 0 0.2rem;
   box-sizing: border-box;
-  flex: 1;
+  height: 100%;
+  overflow: hidden;
   .filter {
     text-align: right;
     color: #1989fa;
@@ -223,15 +218,13 @@ export default {
   }
   .game-item {
     height: 0.64rem;
+    margin: 0 0.2rem;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
-    &:last-of-type {
-      border-bottom: 1px solid #ccc;
-    }
   }
   .th {
     span {
@@ -263,6 +256,11 @@ export default {
     display: flex;
     align-items: center;
     padding-left: 0.08rem;
+  }
+
+  .table-image {
+    height: 100%;
+    overflow: hidden;
   }
 
   .table-image-item {
@@ -310,5 +308,11 @@ export default {
       margin: 0 0.12rem;
     }
   }
+}
+.table-content {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 </style>
